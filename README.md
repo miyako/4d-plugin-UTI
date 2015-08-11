@@ -27,7 +27,6 @@ $path:=Get 4D folder(Current resources folder)+"email.key"
 $uti:=PATH Get uti ($path)
 $icon:=UTI Get icon ($uti)
 $thumbnail:=PATH Get thumbnail ($path;64;64)
-SET PICTURE TO PASTEBOARD($icon)
 ```
 
 **Open with application**
