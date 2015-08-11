@@ -11,7 +11,7 @@ $name:=PATH Get name ($path;$nameWithoutExtension;$extension)
 $directoryPath:=PATH Get directory path ($path)
 ```
 
-**Inspect UTI***
+**Inspect UTI**
 
 ```
 $uti:=PATH Get uti ($path)
