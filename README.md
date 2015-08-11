@@ -14,6 +14,7 @@ $directoryPath:=PATH Get directory path ($path)
 **Inspect UTI**
 
 ```
+$path:=Get 4D folder(Current resources folder)+"email.key"
 $uti:=PATH Get uti ($path)
 $declaration:=UTI Get declaration ($uti)
 $description:=UTI Get description ($uti)
