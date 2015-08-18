@@ -245,15 +245,14 @@ void PATH_Get_directory_path(sLONG_PTR *pResult, PackagePtr pParams)
     NSString *path = Param1.copyPath();
     NSString *directortPath = [path stringByDeletingLastPathComponent];
     
-    if(directortPath){
+    if([directortPath length]){
         NSURL *url = [[NSURL alloc]initFileURLWithPath:directortPath isDirectory:YES];
         directortPath = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLHFSPathStyle);
         if(directortPath){
             returnValue.setUTF16String(directortPath);
             [directortPath release];
         }
-    }
-    
+    }    
     [path release];
     
     returnValue.setReturn(pResult);
@@ -267,11 +266,14 @@ void PATH_Get_uti(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     
     NSString *path = Param1.copyPath();
-    NSError *error;
-    NSString *uti = [[NSWorkspace sharedWorkspace]typeOfFile:path error:&error];
-    if(uti){
-        returnValue.setUTF16String(uti);
+    if([path length]){
+        NSError *error;
+        NSString *uti = [[NSWorkspace sharedWorkspace]typeOfFile:path error:&error];
+        if(uti){
+            returnValue.setUTF16String(uti);
+        }
     }
+
     [path release];
     
     returnValue.setReturn(pResult);

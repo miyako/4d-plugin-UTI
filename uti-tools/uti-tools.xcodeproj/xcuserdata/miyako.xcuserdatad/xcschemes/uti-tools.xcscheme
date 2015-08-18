@@ -41,6 +41,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
+         BundleIdentifier = "com.4d.4d"
          FilePath = "/Applications/4D/14.4.188598/4D.app">
       </PathRunnable>
       <MacroExpansion>
