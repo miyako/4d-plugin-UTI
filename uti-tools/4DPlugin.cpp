@@ -243,14 +243,14 @@ void PATH_Get_directory_path(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     
     NSString *path = Param1.copyPath();
-    NSString *directortPath = [path stringByDeletingLastPathComponent];
+    NSString *directortyPath = [path stringByDeletingLastPathComponent];
     
-    if([directortPath length]){
-        NSURL *url = [[NSURL alloc]initFileURLWithPath:directortPath isDirectory:YES];
-        directortPath = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLHFSPathStyle);
-        if(directortPath){
-            returnValue.setUTF16String(directortPath);
-            [directortPath release];
+    if([directortyPath length]){
+        NSURL *url = [[NSURL alloc]initFileURLWithPath:directortyPath isDirectory:YES];
+        directortyPath = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLHFSPathStyle);
+        if(directortyPath){
+            returnValue.setUTF16String(directortyPath);
+            [directortyPath release];
         }
     }    
     [path release];
@@ -381,13 +381,23 @@ void UTI_From_extension(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     
     NSString *extension = Param1.copyUTF16String();
-    NSString *uti = (NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)extension, NULL);
-    if(uti){
-        returnValue.setUTF16String(uti);
-        [uti release];
-    }
-    [extension release];
     
+    if([[extension lowercaseString]isEqualToString:@"key"]){
+        returnValue.setUTF16String(@"com.apple.iwork.keynote.sffkey");
+    }else if([[extension lowercaseString]isEqualToString:@"pages"]){
+        returnValue.setUTF16String(@"com.apple.iwork.pages.sffpages");
+    }else if([[extension lowercaseString]isEqualToString:@"numbers"]){
+        returnValue.setUTF16String(@"com.apple.iwork.numbers.sffnumbers");
+    }else{
+
+        NSString *uti = (NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)extension, NULL);
+        if(uti){
+            returnValue.setUTF16String(uti);
+            [uti release];
+        }
+        [extension release];
+
+    }
     returnValue.setReturn(pResult);
 }
 
