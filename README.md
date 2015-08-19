@@ -1,6 +1,24 @@
 # 4d-plugin-uti-tools
 Utility functions to handle UTI on OS X
 
+Changes
+---
+
+**2015-08-19**
+```
+  //return "sff" (iWork 09) UTI
+$k:=UTI From extension ("key")
+$p:=UTI From extension ("pages")
+$n:=UTI From extension ("numbers")
+```
+**2015-08-18**
+
+```
+  //fix crash with empty string
+$uti:=PATH Get uti ("")
+$uti:=PATH Get directory path ("")
+```
+
 **Process path components**
  
 ```
