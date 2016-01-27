@@ -1,5 +1,11 @@
 # 4d-plugin-uti-tools
-Utility functions to handle UTI on OS X
+Utility functions to handle UTI on OS X.
+
+##Platform
+
+| carbon | cocoa | win32 | win64 |
+|:------:|:-----:|:---------:|:---------:|
+|10.6|10.8|🚫|🚫|
 
 Changes
 ---
