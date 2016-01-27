@@ -5,7 +5,7 @@ Utility functions to handle UTI on OS X.
 
 | carbon | cocoa | win32 | win64 |
 |:------:|:-----:|:---------:|:---------:|
-|10.6|10.8|🚫|🚫|
+|🆗|🆗|🚫|🚫|
 
 Changes
 ---
