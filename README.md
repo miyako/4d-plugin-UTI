@@ -7,6 +7,38 @@ Utility functions to handle UTI on OS X.
 |:------:|:-----:|:---------:|:---------:|
 |🆗|🆗|🚫|🚫|
 
+Commands
+---
+
+```c
+// --- Path
+PATH_GET_COMPONENTS
+PATH_Get_name
+PATH_Get_directory_path
+PATH_Get_uti
+PATH_OPEN_WITH_APPLICATION
+PATH_Get_thumbnail
+
+// --- Conversion
+UTI_To_ostype
+UTI_To_mime
+UTI_To_extension
+UTI_From_ostype
+UTI_From_mime
+UTI_From_extension
+
+// --- Comparision
+UTI_Equal
+UTI_Conforms_to
+
+// --- Information
+UTI_Get_declaration
+UTI_Get_localized_description
+UTI_Get_icon
+UTI_Get_application
+UTI_Get_description
+```
+
 Changes
 ---
 
