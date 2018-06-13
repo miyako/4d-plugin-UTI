@@ -1,5 +1,5 @@
 # 4d-plugin-uti-tools
-Utility functions to handle UTI on OS X.
+Utility functions to handle UTI on Mac
 
 ### Platform
 
@@ -22,6 +22,8 @@ except
 * ``UTI Get icon``
 
 * ``PATH Get thumbnail``
+
+* ``PATH GET COMPONENTS``
 
 **Process path components**
  
