@@ -5,7 +5,7 @@
 							 {
 							 "theme": "Path",
 							 "syntax": "PATH GET COMPONENTS(&T;&Y)",
-							 "threadSafe": true
+							 "threadSafe": false
 							 },
 							 {
 							 "theme": "Path",
