@@ -15,6 +15,14 @@ Utility functions to handle UTI on OS X.
 
 [1.2](https://github.com/miyako/4d-plugin-uti-tools/releases/tag/1.2)
 
+![preemption xx](https://user-images.githubusercontent.com/1725068/41327179-4e839948-6efd-11e8-982b-a670d511e04f.png)
+
+except 
+
+* ``UTI Get icon``
+
+* ``PATH Get thumbnail``
+
 Changes
 ---
 
