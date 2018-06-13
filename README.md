@@ -19,9 +19,9 @@ Utility functions to handle UTI on OS X.
 
 except 
 
-* ``UTI Get icon`` (``PA_CreatePicture``)
+* ``UTI Get icon``
 
-* ``PATH Get thumbnail`` (``PA_CreatePicture``)
+* ``PATH Get thumbnail``
 
 **Process path components**
  
