@@ -23,6 +23,8 @@ except
 
 * ``PATH Get thumbnail``
 
+* ``PATH GET COMPONENTS``
+
 **Process path components**
  
 ```
