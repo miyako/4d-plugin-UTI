@@ -1,0 +1,101 @@
+{
+	"name": "UTI",
+	"id": 20000,
+	"commands": [
+		{
+			"theme": "Path",
+			"syntax": "PATH GET COMPONENTS(&T;&Y)",
+			"threadSafe": true
+		},
+		{
+			"theme": "Path",
+			"syntax": "PATH Get name(&T;&T;&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Path",
+			"syntax": "PATH Get directory path(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI To ostype(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI To mime(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI To extension(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI From ostype(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI From mime(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Conversion",
+			"syntax": "UTI From extension(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Comparision",
+			"syntax": "UTI Equal(&T;&T):L",
+			"threadSafe": true
+		},
+		{
+			"theme": "Comparision",
+			"syntax": "UTI Conforms to(&T;&T):L",
+			"threadSafe": true
+		},
+		{
+			"theme": "Information",
+			"syntax": "UTI Get declaration(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Information",
+			"syntax": "UTI Get localized description(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Information",
+			"syntax": "UTI Get icon(&T):P",
+			"threadSafe": true
+		},
+		{
+			"theme": "Information",
+			"syntax": "UTI Get application(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Information",
+			"syntax": "UTI Get description(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Path",
+			"syntax": "PATH Get uti(&T):T",
+			"threadSafe": true
+		},
+		{
+			"theme": "Path",
+			"syntax": "PATH OPEN WITH APPLICATION(&T;&T;&L)",
+			"threadSafe": true
+		},
+		{
+			"theme": "Path",
+			"syntax": "PATH Get thumbnail(&T;&8;&8):P",
+			"threadSafe": true
+		}
+	]
+}
