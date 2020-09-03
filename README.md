@@ -1,4 +1,4 @@
-# 4d-plugin-uti-tools
+# 4d-plugin-UTI
 Utility functions to handle UTI on Mac
 
 ### Platform
