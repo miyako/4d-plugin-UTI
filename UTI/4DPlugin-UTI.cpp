@@ -427,21 +427,17 @@ void UTI_Get_application(PA_PluginParameters params) {
     Param1.fromParamAtIndex(pParams, 1);
     
     NSString *uti = Param1.copyUTF16String();
-    NSString *mime = (NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)uti, kUTTagClassMIMEType);
-    if(mime){
-        CFURLRef url;
-        //use LSCopyDefaultApplicationURLForContentType in 10.10
-        if(noErr == LSCopyApplicationForMIMEType((CFStringRef)mime, kLSRolesAll, &url)){
-            NSString *path = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLHFSPathStyle);
-            if(path){
-                returnValue.setUTF16String(path);
-                [path release];
-            }
-        }
-        
-        [mime release];
-    }
     
+    CFURLRef url = LSCopyDefaultApplicationURLForContentType((CFStringRef)uti, kLSRolesAll, NULL);
+    if(url){
+        NSString *path = (NSString *)CFURLCopyFileSystemPath((CFURLRef)url, kCFURLHFSPathStyle);
+        if(path){
+            returnValue.setUTF16String(path);
+            [path release];
+        }
+        CFRelease(url);
+    }
+
     [uti release];
     
     returnValue.setReturn(pResult);
