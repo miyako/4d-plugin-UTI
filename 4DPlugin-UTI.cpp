@@ -156,6 +156,7 @@ void PATH_Get_directory_path(PA_PluginParameters params) {
             returnValue.setUTF16String(directortyPath);
             [directortyPath release];
         }
+        [url release];
     }
     [path release];
     
@@ -292,9 +293,9 @@ void UTI_From_extension(PA_PluginParameters params) {
             returnValue.setUTF16String(uti);
             [uti release];
         }
-        [extension release];
 
     }
+    [extension release];
     returnValue.setReturn(pResult);
 }
 
@@ -397,22 +398,28 @@ void UTI_Get_icon(PA_PluginParameters params) {
     
     NSString *uti = Param1.copyUTF16String();
     NSImage *icon = [[NSWorkspace sharedWorkspace]iconForFileType:uti];
-    NSRect imageRect = NSMakeRect(0, 0, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
-    CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
-    CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
-    CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
-    CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-    CGImageDestinationAddImage(destination, image, properties);
-    CGImageDestinationFinalize(destination);
-    
-    //return picture without memory leak
-    PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
-    *(PA_Picture*) pResult = picture;
 
-    CFRelease(destination);
-    CFRelease(properties);
-    CFRelease(data);
-    
+    if(icon){
+        NSRect imageRect = NSMakeRect(0, 0, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
+        CGImageRef image = [icon CGImageForProposedRect:(NSRect *)&imageRect context:NULL hints:NULL];
+
+        if(image){
+            CFMutableDataRef data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+            CGImageDestinationRef destination = CGImageDestinationCreateWithData(data, kUTTypeTIFF, 1, NULL);
+            CFMutableDictionaryRef properties = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+            CGImageDestinationAddImage(destination, image, properties);
+            CGImageDestinationFinalize(destination);
+
+            //return picture without memory leak
+            PA_Picture picture = PA_CreatePicture((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+            *(PA_Picture*) pResult = picture;
+
+            CFRelease(destination);
+            CFRelease(properties);
+            CFRelease(data);
+        }
+    }
+
     [uti release];
 }
 
