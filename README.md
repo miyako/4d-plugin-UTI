@@ -39,6 +39,11 @@ and again after it. It creates a new tag at the selected SHA, then a new public
 release with empty notes and only `UTI-X.Y.Z.zip` and `UTI-X.Y.Z.dmg`. Existing
 tags/releases are never reused, overwritten, or deleted. Generated outputs stay
 intact while HEAD, index, and nongenerated raw source bytes remain immutable.
+The repository binding uses GitHub's canonical `miyako/4d-plugin-UTI` spelling.
+Within `build/XCBuildData`, only `build.db`, its `-wal`/`-shm` companions, and
+32-lowercase-hex `.xcbuilddata` record descendants qualify as generated outputs;
+unknown source/configuration files remain protected. Cleanup never recursively
+removes XCBuildData, and publication rechecks copied resources against source.
 
 On failure, inspect the reported tag/release ID and retained uploaded assets.
 Partial publication requires manual recovery; there is no automatic retry,

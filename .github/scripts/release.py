@@ -16,7 +16,7 @@ import repository
 import source_version
 
 
-REPOSITORY = "miyako/4d-plugin-uti"
+REPOSITORY = "miyako/4d-plugin-UTI"
 PRODUCT = "UTI"
 TAG = re.compile("v" + source_version.VERSION + r"\Z")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -142,12 +142,13 @@ def context(sha, *, final=False):
     repository.selected_sha(sha)
     version = source_version.read()
     if final:
-        native.validate_paths((*native.FILES, *native.DIRECTORIES,
+        native.validate_paths((*native.FILES, *native.DIRECTORIES, native.XCODE_DATA,
                                *map(Path, asset_names(version))))
     repository.verify_checkout(sha, generated=native.generated,
                                assets=asset_names(version), final=final)
     if final:
         source_version.verify_bundle(native.BUNDLE)
+        native.verify_resources()
     return version, "v" + version
 
 

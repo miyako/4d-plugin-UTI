@@ -136,7 +136,7 @@ with open(os.environ["GH_LOG"], "a") as out:
 state_path = pathlib.Path(os.environ["GH_STATE"])
 state = json.loads(state_path.read_text())
 mode = os.environ.get("GH_MODE", "")
-repo = "miyako/4d-plugin-uti"
+repo = "miyako/4d-plugin-UTI"
 upload = "https://uploads.github.com/repos/"+repo+"/releases/789/assets"
 if method == "GET" and "/releases?" in endpoint:
     page = int(endpoint.rsplit("page=",1)[1])
@@ -270,9 +270,13 @@ class PublicationCLITests(GitFixture):
             self.generated[2]: source.text(self.local / source.LOCALIZED).encode("utf-16"),
             self.generated[-1]: b"fresh signature bytes",
             "build/XCBuildData/build.db": b"fresh Xcode build database",
+            "build/XCBuildData/build.db-wal": b"fresh Xcode write-ahead log",
+            "build/XCBuildData/build.db-shm": b"fresh Xcode shared memory",
+            "build/XCBuildData/0123456789abcdef0123456789abcdef.xcbuilddata/build-request.json":
+                b"fresh Xcode request",
             "build/Default/UTI.build/build.db": b"fresh intermediate",
         }
-        data.update({path: b"fresh native copied output"
+        data.update({path: (self.local / Path(path).name).read_bytes()
                      for path in self.generated[3:-1]})
         for path, raw in data.items():
             target = self.local / path
@@ -283,14 +287,17 @@ class PublicationCLITests(GitFixture):
         return data
 
     def test_actual_cli_clean_preflight_then_tracked_native_dirt_publish_retains_exact_bytes(self):
-        result = self.command("preflight")
+        canonical = "miyako/4d-plugin-UTI"
+        self.assertEqual(release.REPOSITORY, canonical)
+        result = self.command("preflight", extra_env={"GITHUB_REPOSITORY": canonical})
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.output.read_text(), f"version={self.version}\ntag={self.tag}\n")
         expected = self.build()
         self.assertNotEqual(self.command("preflight").returncode, 0)
         self.reset_api()
         self.assertEqual(self.command("check").returncode, 0)
-        self.assertEqual(self.command("publish").returncode, 0)
+        self.assertEqual(self.command("publish", extra_env={
+            "GITHUB_REPOSITORY": canonical}).returncode, 0)
         for path, raw in expected.items():
             self.assertEqual((self.local / path).read_bytes(), raw)
         self.assertEqual(self.git("rev-parse", "HEAD"), self.sha)
@@ -319,11 +326,16 @@ class PublicationCLITests(GitFixture):
         database.unlink()
 
         expected = self.build()
-        unexpected = self.local / "build/unexpected-source.cpp"
-        unexpected.write_bytes(b"ignored source is not a generated database")
-        self.assertNotEqual(self.command("publish").returncode, 0)
-        self.assertEqual(self.calls(), [])
-        unexpected.unlink()
+        for path in ("build/unexpected-source.cpp", "build/XCBuildData/unexpected-source.cpp",
+                     "build/XCBuildData/build.db-evil",
+                     "build/XCBuildData/evil.xcbuilddata/build-request.json"):
+            unexpected = self.local / path
+            unexpected.parent.mkdir(parents=True, exist_ok=True)
+            unexpected.write_bytes(b"ignored source is not a generated database")
+            self.assertEqual(self.git("check-ignore", "--", path), path)
+            self.assertNotEqual(self.command("publish").returncode, 0)
+            self.assertEqual(self.calls(), [])
+            unexpected.unlink()
         config = self.local / ".gitignore"
         config.write_bytes(self.baseline[".gitignore"] + b"unexpected-config\n")
         self.git("add", "--", ".gitignore")
@@ -338,6 +350,8 @@ class PublicationCLITests(GitFixture):
         self.assertEqual(self.git("check-ignore", "--", relative), relative)
         self.assertEqual(self.git("rev-parse", "HEAD"), self.sha)
         for path, raw in self.baseline.items():
+            self.assertEqual((self.local / path).read_bytes(), raw)
+        for path, raw in expected.items():
             self.assertEqual((self.local / path).read_bytes(), raw)
 
     def test_each_source_config_staged_unstaged_reversed_hidden_flag_fails_before_api(self):
@@ -365,6 +379,7 @@ class PublicationCLITests(GitFixture):
     def test_head_source_version_wrong_repo_and_explicit_auth_fail_before_api(self):
         self.build()
         for env in ({"GH_TOKEN": ""}, {"GH_TOKEN": " ", "GITHUB_TOKEN": "\t"},
+                    {"GITHUB_REPOSITORY": "miyako/4d-plugin-uti"},
                     {"GITHUB_REPOSITORY": "owner/other"}, {"GITHUB_SHA": "b" * 40}):
             result = self.command("publish", extra_env=env)
             self.assertNotEqual(result.returncode, 0)
@@ -425,6 +440,16 @@ class PublicationCLITests(GitFixture):
                     self.assertNotEqual(result.returncode, 0)
                     self.assertEqual(self.calls(), [])
                     target.write_bytes(saved)
+
+    def test_final_copied_resource_drift_fails_before_api(self):
+        self.build()
+        for name in ("manifest.json", "constants.xlf"):
+            target = self.local / native.BUNDLE / "Contents/Resources" / name
+            saved = target.read_bytes()
+            target.write_bytes(b"changed after native verification")
+            self.assertNotEqual(self.command("publish").returncode, 0)
+            self.assertEqual(self.calls(), [])
+            target.write_bytes(saved)
 
     def test_untracked_ignored_source_config_and_unproven_outputs_fail_before_api(self):
         self.build()

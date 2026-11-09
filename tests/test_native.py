@@ -70,6 +70,19 @@ class NativePreparationTests(Fixture):
             with self.assertRaisesRegex(ValueError, "differs"):
                 native.verify_resources()
 
+    def test_xcode_data_is_not_recursively_cleaned(self):
+        paths = (
+            "build/XCBuildData/build.db",
+            "build/XCBuildData/unexpected-source.cpp",
+            "build/XCBuildData/evil.xcbuilddata/keep",
+        )
+        for path in paths:
+            self.write(path, b"preserve original bytes")
+        with cwd(self.root):
+            native.prepare()
+        for path in paths:
+            self.assertEqual((self.root / path).read_bytes(), b"preserve original bytes")
+
 
 class GeneratedRetentionTests(GitFixture):
     def test_actual_xcode_database_wal_and_outputs_are_final_only(self):
@@ -77,7 +90,7 @@ class GeneratedRetentionTests(GitFixture):
             *native.FILES,
             "build/XCBuildData/build.db", "build/XCBuildData/build.db-wal",
             "build/XCBuildData/build.db-shm",
-            "build/XCBuildData/abc.xcbuilddata/build-request.json",
+            "build/XCBuildData/0123456789abcdef0123456789abcdef.xcbuilddata/build-request.json",
             "build/UTI.build/Default/UTI.build/Objects-normal/arm64/main.o",
             "build/Default/UTI.build/main.o",
         ):
@@ -92,6 +105,9 @@ class GeneratedRetentionTests(GitFixture):
     def test_evil_siblings_and_protected_resource_never_gain_final_exemption(self):
         for relative in (
             "build/XCBuildData-evil/build.db",
+            "build/XCBuildData/unexpected-source.cpp",
+            "build/XCBuildData/build.db-evil",
+            "build/XCBuildData/evil.xcbuilddata/build-request.json",
             "build/UTI.build-evil/main.o",
             "build/unexpected-source.cpp",
             "Objs/Release-evil/main.obj",

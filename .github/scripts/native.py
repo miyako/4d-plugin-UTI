@@ -2,6 +2,7 @@
 
 import argparse
 from pathlib import Path
+import re
 import shutil
 
 
@@ -14,8 +15,8 @@ FILES = tuple(BUNDLE / relative for relative in (
     "Contents/Resources/constants.xlf", "Contents/Resources/manifest.json",
     "Contents/_CodeSignature/CodeResources",
 ))
+XCODE_DATA = Path("build/XCBuildData")
 DIRECTORIES = (
-    Path("build/XCBuildData"),
     Path("build") / (PRODUCT + ".build"),
     Path("build/Default") / (PRODUCT + ".build"),
     BASE / (PRODUCT + ".build"),
@@ -25,6 +26,9 @@ DIRECTORIES = (
 
 def generated(path):
     return (path in set(map(str, FILES))
+            or bool(re.fullmatch(
+                r"build/XCBuildData/(?:build\.db(?:-wal|-shm)?|"
+                r"[0-9a-f]{32}\.xcbuilddata/.+)", path))
             or any(path.startswith(str(directory) + "/")
                    for directory in DIRECTORIES))
 
@@ -48,7 +52,7 @@ def validate_paths(paths):
 def prepare():
     files = FILES
     directories = DIRECTORIES
-    validate_paths((*files, *directories))
+    validate_paths((*files, *directories, XCODE_DATA))
     for path in files:
         path.unlink(missing_ok=True)
     for path in directories:

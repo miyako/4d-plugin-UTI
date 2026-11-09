@@ -31,7 +31,7 @@ contents = pathlib.Path("test/Plugins/UTI.bundle/Contents")
 if tool in ("python", "python3"):
     if args and args[0].endswith("release.py"):
         assert os.environ["GH_TOKEN"] == "offline-only"
-        assert os.environ["GITHUB_REPOSITORY"] == "miyako/4d-plugin-uti"
+        assert os.environ["GITHUB_REPOSITORY"] == "miyako/4d-plugin-UTI"
         assert args[2:4] == ["--sha", os.environ["GITHUB_SHA"]]
         if args[1] == "publish":
             assert args[4:] == [f"UTI-{os.environ['VERSION']}.zip",
@@ -124,7 +124,7 @@ class NativeWorkflowTests(Fixture):
             "KEYCHAIN_PATH": str(self.checkout / "offline.keychain"),
             "BUNDLE_PATH": str(native.BUNDLE), "GITHUB_ENV": str(self.checkout / "github-env"),
             "GITHUB_SHA": "a" * 40, "GH_TOKEN": "offline-only",
-            "GITHUB_REPOSITORY": "miyako/4d-plugin-uti",
+            "GITHUB_REPOSITORY": "miyako/4d-plugin-UTI",
             "PYTHONDONTWRITEBYTECODE": "1", "POWERSHELL_TELEMETRY_OPTOUT": "1",
             "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
             "CERT_BASE64": "b2ZmbGluZQ==", "CERT_PASSWORD": "offline-only",
