@@ -9,6 +9,49 @@ This plugin gives 4D methods direct access to macOS's Uniform Type Identifier (U
 
 ---
 
+## Manual maintenance and publication
+
+**Bump version** and **Build** are independent Actions workflows. Select the
+branch using GitHub's built-in selector. Bump requires one `patch` (default),
+`minor`, or `major` choice; it validates source metadata and pushes one guarded
+source-only child commit. It never builds, creates tags/releases, or starts Build.
+Build has no custom inputs and builds the immutable selected commit, not a typed
+tag. Run it separately after reviewing the source version.
+
+The source version is canonical `X.Y.Z`: all six marketing/build settings, the
+required `Info.plist` short version, and copied English display metadata agree.
+The optional plist build key remains absent when absent. The coordinated Bump
+header introduced in `c4edf87976c9a144229af9d8b3430089fc0320ab` supersedes the
+earlier marketing-only policy. This migration retains `2.0.8`, only aligning stale
+source build/localization tokens; prebuilt bundles and archives are untouched.
+
+Build preserves the macOS-only Default target, deployment target 10.13, exact
+`arm64` and `x86_64` executable slices (additional slices permitted), resources,
+frameworks, runtime files, and committed Windows payload. Native cleanup removes
+only named generated leaves/intermediates, never whole bundles or Default
+siblings. Built plist/localization, strict signing, both Accepted notarization
+results and DMG stapling are required before publication.
+
+Publication is serialized repository-wide across refs (`cancel-in-progress:
+false`, with no FIFO guarantee). It checks authenticated, draft-inclusive,
+paginated release availability and exact API/Git tag absence before native work
+and again after it. It creates a new tag at the selected SHA, then a new public
+release with empty notes and only `UTI-X.Y.Z.zip` and `UTI-X.Y.Z.dmg`. Existing
+tags/releases are never reused, overwritten, or deleted. Generated outputs stay
+intact while HEAD, index, and nongenerated raw source bytes remain immutable.
+
+On failure, inspect the reported tag/release ID and retained uploaded assets.
+Partial publication requires manual recovery; there is no automatic retry,
+rollback, deletion, or clobber. Do not rerun against an occupied version without
+reviewing that state.
+
+Offline regression checks (no SDK, signing, notarization, or 4D execution):
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v` and
+`actionlint`. Tests require Python with PyYAML and use isolated local Git remotes
+and closed-PATH native/credential stubs.
+
+---
+
 ## Summary table
 
 | Command | Returns | Purpose |
