@@ -50,10 +50,16 @@ Partial publication requires manual recovery; there is no automatic retry,
 rollback, deletion, or clobber. Do not rerun against an occupied version without
 reviewing that state.
 
-Offline regression checks (no SDK, signing, notarization, or 4D execution):
+Non-release regression checks (no signing, notarization, or 4D execution):
 `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v` and
 `actionlint`. Tests require Python with PyYAML and use isolated local Git remotes
-and closed-PATH native/credential stubs.
+and closed-PATH native/credential stubs. On macOS, the native ownership tests
+also require the existing Xcode command-line tools and compile the bundled SDK
+and actual first-party sources into temporary storage.
+
+The [native ownership audit](docs/native-ownership.md) records the complete
+native-source inventory, dormant JSON helper fixes, bundled SDK contracts,
+and targeted macOS sanitizer regression command.
 
 ---
 
