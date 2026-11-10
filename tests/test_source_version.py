@@ -374,5 +374,8 @@ class SourceVersionTests(Fixture):
             "test", "a", "lib", "include", "4D Plugin API", "support",
             "manifest.json", "constants.json", "constants.xlf",
             "UTI.vcxproj", "UTI.sln", "UTI.zip", "UTI.dmg",
+            # Issue #2 authorizes only these first-party ownership repairs.
+            ":(exclude)support/4DPlugin-JSON.cpp",
+            ":(exclude)support/4DPlugin-JSON.h",
         ], cwd=ROOT)
         self.assertEqual(diff, b"")

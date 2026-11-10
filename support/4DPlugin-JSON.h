@@ -103,9 +103,11 @@ void ob_set_b(PA_ObjectRef obj, const wchar_t *_key, bool value);
 void ob_set_0(PA_ObjectRef obj, const wchar_t *_key);
 void ob_set_0(PA_ObjectRef obj, const char *_key);
 bool ob_is_defined(PA_ObjectRef obj, const wchar_t *_key);
+// Getters throw std::runtime_error on a failed SDK property read.
 bool ob_get_a(PA_ObjectRef obj, const wchar_t *_key, CUTF8String *value);
 bool ob_get_b(PA_ObjectRef obj, const wchar_t *_key);
 double ob_get_n(PA_ObjectRef obj, const wchar_t *_key);
+// A non-null result is owning; the caller must PA_DisposeCollection it.
 PA_CollectionRef ob_get_c(PA_ObjectRef obj, const wchar_t *_key);
 
 void ob_stringify(PA_ObjectRef obj, CUTF8String *value);
